@@ -1,11 +1,7 @@
 {
   "name": "logistics-workflow-hackathon",
   "private": true,
-  "packageManager": "npm@10.0.0",
-  "workspaces": [
-    "packages/*",
-    "apps/*"
-  ],
+  "packageManager": "pnpm@10.0.0",
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",

@@ -8,10 +8,10 @@ Transform natural language into executable logistics workflows powered by AI. Bu
 # Clone and setup
 git clone <your-repo-url>
 cd brexHack25
-npm install
+pnpm install
 
 # Start development
-npm run dev
+pnpm run dev
 
 # Open in browser - Main app will be available at:
 # http://localhost:3000
@@ -71,22 +71,22 @@ The app comes pre-loaded with compelling demo scenarios:
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Start development (all packages)
-npm run dev
+pnpm run dev
 
 # Build for production
-npm run build
+pnpm run build
 
 # Start production server
-npm run start
+pnpm run start
 
 # Lint code
-npm run lint
+pnpm run lint
 
 # Clean build artifacts
-npm run clean
+pnpm run clean
 ```
 
 ## 🏗️ Architecture Overview
@@ -133,7 +133,7 @@ npm run clean
 
 ### Vercel (Recommended for Hackathons)
 ```bash
-npm run build
+pnpm run build
 npx vercel --prod
 ```
 

@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(npm run dev:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(touch:*)"
     ],
     "deny": [],
     "ask": []
