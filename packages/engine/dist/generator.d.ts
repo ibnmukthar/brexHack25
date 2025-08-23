@@ -8,4 +8,11 @@ export declare class WorkflowGenerator {
     private generateReturnWorkflow;
     private getOptimizationObjectives;
     private getCarrierWeights;
+    private generateFreightForwardingWorkflow;
+    private generateWarehousingWorkflow;
+    private generateCustomsWorkflow;
+    private generateConsolidationWorkflow;
+    private generatePortManagementWorkflow;
+    private generateComplianceWorkflow;
+    private generateCrossDockingWorkflow;
 }

@@ -1,5 +1,7 @@
 export interface LogisticsIntent {
-  type: 'tracking' | 'optimization' | 'carrier_selection' | 'inventory' | 'return_processing';
+  type: 'tracking' | 'optimization' | 'carrier_selection' | 'inventory' | 'return_processing' |
+        'freight_forwarding' | 'warehousing' | 'customs' | 'consolidation' | 'port_management' |
+        'compliance' | 'cross_docking';
   entities: Record<string, any>;
   priority: 'low' | 'medium' | 'high';
   constraints?: {

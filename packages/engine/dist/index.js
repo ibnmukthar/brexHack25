@@ -14,7 +14,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MockIntegrations = exports.WorkflowExecutor = exports.WorkflowGenerator = exports.WorkflowParser = exports.LogisticsEngine = void 0;
+exports.AIProviderFactory = exports.ClaudeService = exports.MockIntegrations = exports.WorkflowExecutor = exports.WorkflowGenerator = exports.WorkflowParser = exports.LogisticsEngine = void 0;
 exports.textToWorkflow = textToWorkflow;
 var engine_1 = require("./engine");
 Object.defineProperty(exports, "LogisticsEngine", { enumerable: true, get: function () { return engine_1.LogisticsEngine; } });
@@ -27,6 +27,10 @@ Object.defineProperty(exports, "WorkflowExecutor", { enumerable: true, get: func
 var mock_integrations_1 = require("./mock-integrations");
 Object.defineProperty(exports, "MockIntegrations", { enumerable: true, get: function () { return mock_integrations_1.MockIntegrations; } });
 __exportStar(require("./types"), exports);
+var claude_service_1 = require("./ai-providers/claude-service");
+Object.defineProperty(exports, "ClaudeService", { enumerable: true, get: function () { return claude_service_1.ClaudeService; } });
+var provider_factory_1 = require("./ai-providers/provider-factory");
+Object.defineProperty(exports, "AIProviderFactory", { enumerable: true, get: function () { return provider_factory_1.AIProviderFactory; } });
 async function textToWorkflow(input) {
     const { LogisticsEngine } = await Promise.resolve().then(() => require('./engine'));
     const engine = new LogisticsEngine();

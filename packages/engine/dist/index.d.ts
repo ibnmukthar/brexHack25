@@ -4,6 +4,9 @@ export { WorkflowGenerator } from './generator';
 export { WorkflowExecutor } from './executor';
 export { MockIntegrations } from './mock-integrations';
 export * from './types';
+export { AIProvider, WorkflowTemplate, ParameterSchema } from './ai-providers/ai-provider-interface';
+export { ClaudeService } from './ai-providers/claude-service';
+export { AIProviderFactory, AIProviderType } from './ai-providers/provider-factory';
 export declare function textToWorkflow(input: string): Promise<{
     id: string;
     intent: import("./types").LogisticsIntent;

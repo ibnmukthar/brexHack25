@@ -1,5 +1,5 @@
 export interface LogisticsIntent {
-    type: 'tracking' | 'optimization' | 'carrier_selection' | 'inventory' | 'return_processing';
+    type: 'tracking' | 'optimization' | 'carrier_selection' | 'inventory' | 'return_processing' | 'freight_forwarding' | 'warehousing' | 'customs' | 'consolidation' | 'port_management' | 'compliance' | 'cross_docking';
     entities: Record<string, any>;
     priority: 'low' | 'medium' | 'high';
     constraints?: {
@@ -9,6 +9,15 @@ export interface LogisticsIntent {
         costPriority?: 'minimize' | 'maximize';
         timePriority?: 'minimize' | 'maximize';
     };
+}
+export interface WorkflowParams {
+    [key: string]: any;
+}
+export interface ExecutionContext {
+    workflowId: string;
+    parameters: WorkflowParams;
+    stepOutputs: Record<string, any>;
+    startTime: Date;
 }
 export interface WorkflowStep {
     id: string;

@@ -18,6 +18,48 @@ export class WorkflowParser {
   }
 
   private detectIntentType(input: string): LogisticsIntent['type'] {
+    // Freight forwarding keywords
+    if (input.includes('ocean freight') || input.includes('freight forward') || input.includes('fcl') || input.includes('lcl') ||
+        input.includes('kuehne') || input.includes('expeditors') || input.includes('book ocean')) {
+      return 'freight_forwarding';
+    }
+
+    // Warehousing keywords
+    if (input.includes('warehouse') || input.includes('3pl') || input.includes('storage') || input.includes('distribution center') ||
+        input.includes('dhl supply') || input.includes('prologis')) {
+      return 'warehousing';
+    }
+
+    // Customs keywords
+    if (input.includes('customs') || input.includes('clearance') || input.includes('import') || input.includes('export') ||
+        input.includes('documentation') || input.includes('duty') || input.includes('tariff')) {
+      return 'customs';
+    }
+
+    // Consolidation keywords
+    if (input.includes('consolidat') || input.includes('ltl') || input.includes('combine') || input.includes('merge shipment')) {
+      return 'consolidation';
+    }
+
+    // Port management keywords
+    if (input.includes('port') || input.includes('congestion') || input.includes('dwell time') || input.includes('vessel') ||
+        input.includes('reroute') || input.includes('terminal')) {
+      return 'port_management';
+    }
+
+    // Compliance keywords
+    if (input.includes('compliance') || input.includes('audit') || input.includes('ctpat') || input.includes('regulation') ||
+        input.includes('certif') || input.includes('standard')) {
+      return 'compliance';
+    }
+
+    // Cross-docking keywords
+    if (input.includes('cross dock') || input.includes('cross-dock') || input.includes('sortation') ||
+        input.includes('inbound') && input.includes('outbound')) {
+      return 'cross_docking';
+    }
+
+    // Original keywords
     if (input.includes('track') || input.includes('tracking') || input.includes('shipment')) {
       return 'tracking';
     }
@@ -33,6 +75,7 @@ export class WorkflowParser {
     if (input.includes('return') || input.includes('rma') || input.includes('refund')) {
       return 'return_processing';
     }
+
     return 'optimization';
   }
 
