@@ -11,6 +11,17 @@ export interface LogisticsIntent {
   };
 }
 
+export interface WorkflowParams {
+  [key: string]: any;
+}
+
+export interface ExecutionContext {
+  workflowId: string;
+  parameters: WorkflowParams;
+  stepOutputs: Record<string, any>;
+  startTime: Date;
+}
+
 export interface WorkflowStep {
   id: string;
   name: string;

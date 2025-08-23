@@ -9,6 +9,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.60.0",
     "openai": "^4.28.0",
     "zod": "^3.22.4"
   },
