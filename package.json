@@ -1,0 +1,25 @@
+{
+  "name": "logistics-workflow-hackathon",
+  "private": true,
+  "packageManager": "npm@10.0.0",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "start": "turbo start",
+    "lint": "turbo lint",
+    "clean": "turbo clean && rm -rf node_modules",
+    "verify": "node verify-setup.js"
+  },
+  "devDependencies": {
+    "turbo": "latest",
+    "@types/node": "^20.11.24",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
