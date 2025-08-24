@@ -2,37 +2,75 @@ import { WorkflowParser } from './parser';
 import { WorkflowGenerator } from './generator';
 import { WorkflowExecutor } from './executor';
 import { MockIntegrations } from './mock-integrations';
+import { AIWorkflowGenerator, AIWorkflowRequest } from './ai-generator';
 import { Workflow, WorkflowUI, UIComponent } from './types';
 
 export class LogisticsEngine {
   private parser: WorkflowParser;
   private generator: WorkflowGenerator;
+  private aiGenerator: AIWorkflowGenerator;
   private executor: WorkflowExecutor;
   private integrations: MockIntegrations;
 
   constructor() {
     this.parser = new WorkflowParser();
     this.generator = new WorkflowGenerator();
+    this.aiGenerator = new AIWorkflowGenerator();
     this.executor = new WorkflowExecutor();
     this.integrations = new MockIntegrations();
   }
 
   async createWorkflow(input: string) {
     console.log('📝 Parsing input:', input);
-    
+
     const intent = await this.parser.parse(input);
     console.log('🎯 Detected intent:', intent);
-    
+
     const workflow = await this.generator.generate(intent);
     console.log('⚙️ Generated workflow:', workflow.name);
-    
+
     const ui = this.generateSimpleUI(workflow);
-    
+
     return {
       id: workflow.id,
       intent,
       workflow,
       ui,
+      executable: true,
+      createdAt: new Date().toISOString()
+    };
+  }
+
+  async createAIWorkflow(input: string) {
+    console.log('🤖 AI Parsing input:', input);
+
+    const intent = await this.parser.parse(input);
+    console.log('🎯 AI Detected intent:', intent);
+
+    // Create AI workflow request
+    const aiRequest: AIWorkflowRequest = {
+      intent,
+      userInput: input,
+      context: {
+        previousWorkflows: [],
+        constraints: intent.constraints || {},
+        preferences: {}
+      }
+    };
+
+    // Generate dynamic workflow with AI
+    const { workflow, langGraph, uiControls } = await this.aiGenerator.generateDynamicWorkflow(aiRequest);
+    console.log('🤖 AI Generated workflow:', workflow.name);
+
+    const ui = this.generateSimpleUI(workflow);
+
+    return {
+      id: workflow.id,
+      intent,
+      workflow,
+      langGraph,
+      ui,
+      uiControls,
       executable: true,
       createdAt: new Date().toISOString()
     };

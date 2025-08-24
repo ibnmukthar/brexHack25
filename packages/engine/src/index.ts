@@ -3,6 +3,7 @@ export { WorkflowParser } from './parser';
 export { WorkflowGenerator } from './generator';
 export { WorkflowExecutor } from './executor';
 export { MockIntegrations } from './mock-integrations';
+export { AIWorkflowGenerator } from './ai-generator';
 export * from './types';
 
 // AI Providers

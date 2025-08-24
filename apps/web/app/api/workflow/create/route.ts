@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { textToWorkflow } from '@logistics/engine';
+import { LogisticsEngine } from '@logistics/engine';
 
 export async function POST(request: NextRequest) {
   try {
-    const { input } = await request.json();
-    
+    const { input, useAI = true } = await request.json();
+
     if (!input || typeof input !== 'string') {
       return NextResponse.json(
         { error: 'Invalid input provided' },
@@ -12,12 +12,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const workflow = await textToWorkflow(input);
-    
+    const engine = new LogisticsEngine();
+
+    // Use AI-powered generation by default
+    const workflow = useAI
+      ? await engine.createAIWorkflow(input)
+      : await engine.createWorkflow(input);
+
     return NextResponse.json(workflow);
   } catch (error) {
     console.error('Workflow creation error:', error);
-    
+
     return NextResponse.json(
       { error: 'Failed to create workflow' },
       { status: 500 }

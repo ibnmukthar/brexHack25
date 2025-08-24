@@ -16,6 +16,11 @@ class WorkflowParser {
         };
     }
     detectIntentType(input) {
+        // Compliance keywords (check early to avoid conflicts)
+        if (input.includes('compliance') || input.includes('audit') || input.includes('ctpat') || input.includes('regulation') ||
+            input.includes('certif') || input.includes('standard') || input.includes('corrective action')) {
+            return 'compliance';
+        }
         // Freight forwarding keywords
         if (input.includes('ocean freight') || input.includes('freight forward') || input.includes('fcl') || input.includes('lcl') ||
             input.includes('kuehne') || input.includes('expeditors') || input.includes('book ocean')) {
@@ -39,11 +44,6 @@ class WorkflowParser {
         if (input.includes('port') || input.includes('congestion') || input.includes('dwell time') || input.includes('vessel') ||
             input.includes('reroute') || input.includes('terminal')) {
             return 'port_management';
-        }
-        // Compliance keywords
-        if (input.includes('compliance') || input.includes('audit') || input.includes('ctpat') || input.includes('regulation') ||
-            input.includes('certif') || input.includes('standard')) {
-            return 'compliance';
         }
         // Cross-docking keywords
         if (input.includes('cross dock') || input.includes('cross-dock') || input.includes('sortation') ||

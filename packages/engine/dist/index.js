@@ -14,7 +14,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AIProviderFactory = exports.ClaudeService = exports.MockIntegrations = exports.WorkflowExecutor = exports.WorkflowGenerator = exports.WorkflowParser = exports.LogisticsEngine = void 0;
+exports.AIProviderFactory = exports.ClaudeService = exports.AIWorkflowGenerator = exports.MockIntegrations = exports.WorkflowExecutor = exports.WorkflowGenerator = exports.WorkflowParser = exports.LogisticsEngine = void 0;
 exports.textToWorkflow = textToWorkflow;
 var engine_1 = require("./engine");
 Object.defineProperty(exports, "LogisticsEngine", { enumerable: true, get: function () { return engine_1.LogisticsEngine; } });
@@ -26,6 +26,8 @@ var executor_1 = require("./executor");
 Object.defineProperty(exports, "WorkflowExecutor", { enumerable: true, get: function () { return executor_1.WorkflowExecutor; } });
 var mock_integrations_1 = require("./mock-integrations");
 Object.defineProperty(exports, "MockIntegrations", { enumerable: true, get: function () { return mock_integrations_1.MockIntegrations; } });
+var ai_generator_1 = require("./ai-generator");
+Object.defineProperty(exports, "AIWorkflowGenerator", { enumerable: true, get: function () { return ai_generator_1.AIWorkflowGenerator; } });
 __exportStar(require("./types"), exports);
 var claude_service_1 = require("./ai-providers/claude-service");
 Object.defineProperty(exports, "ClaudeService", { enumerable: true, get: function () { return claude_service_1.ClaudeService; } });

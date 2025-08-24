@@ -74,41 +74,185 @@ export function WorkflowExecutor({ workflow, onExecute }: WorkflowExecutorProps)
   const simulateExecution = async (workflow: any, finalResult: any) => {
     const steps = workflow.workflow?.steps || [];
     const totalSteps = steps.length;
-    
+
+    // Add initial setup logs
+    setExecution(prev => ({
+      ...prev,
+      logs: [...prev.logs, `🔍 Analyzing workflow: ${totalSteps} steps identified`, `🚀 Initializing logistics integrations...`]
+    }));
+
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     for (let i = 0; i < totalSteps; i++) {
       const step = steps[i];
       const progress = ((i + 1) / totalSteps) * 100;
-      
+
+      // Add step-specific emojis and realistic messages
+      const stepEmoji = getStepEmoji(step.type);
+      const stepMessage = getStepMessage(step.type, step.name);
+
+      setExecution(prev => ({
+        ...prev,
+        progress: ((i + 0.3) / totalSteps) * 100,
+        currentStep: `${stepEmoji} ${step.name}`,
+        logs: [...prev.logs, `${stepEmoji} Executing: ${step.name}`, `   ${stepMessage}`]
+      }));
+
+      // Simulate realistic step duration based on step type
+      const stepDuration = getStepDuration(step.type);
+      await new Promise(resolve => setTimeout(resolve, stepDuration));
+
+      // Add intermediate progress updates for longer steps
+      if (stepDuration > 1500) {
+        setExecution(prev => ({
+          ...prev,
+          progress: ((i + 0.7) / totalSteps) * 100,
+          logs: [...prev.logs, `   📊 Processing data...`]
+        }));
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
+
+      // Complete the step
       setExecution(prev => ({
         ...prev,
         progress,
-        currentStep: step.name,
-        logs: [...prev.logs, `⚙️ Executing: ${step.name}`]
+        logs: [...prev.logs, `✅ Completed: ${step.name}`, `   💡 ${getStepResult(step.type)}`]
       }));
-      
-      // Simulate step duration
-      await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1200));
-      
-      setExecution(prev => ({
-        ...prev,
-        logs: [...prev.logs, `✅ Completed: ${step.name}`]
-      }));
+
+      // Small delay between steps
+      await new Promise(resolve => setTimeout(resolve, 200));
     }
 
-    // Complete execution
+    // Add final completion sequence
+    setExecution(prev => ({
+      ...prev,
+      logs: [...prev.logs, `🔄 Finalizing results...`, `📈 Calculating cost savings...`]
+    }));
+
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    // Complete execution with enhanced results
+    const workflowResults = SAMPLE_WORKFLOW_RESULTS[workflow.intent?.type as keyof typeof SAMPLE_WORKFLOW_RESULTS];
+    const completionTime = `${Math.floor(Math.random() * 3) + 2}.${Math.floor(Math.random() * 9) + 1}`;
+
     setExecution(prev => ({
       ...prev,
       status: 'completed',
       progress: 100,
-      currentStep: 'Workflow completed successfully',
-      logs: [...prev.logs, `🎉 Workflow completed in ${Math.floor(Math.random() * 3) + 1}.${Math.floor(Math.random() * 9) + 1} minutes`],
+      currentStep: '🎉 Workflow completed successfully',
+      logs: [...prev.logs,
+        `🎉 Workflow completed in ${completionTime} minutes`,
+        `💰 Estimated savings: ${workflowResults?.estimatedSavings || '$89.50'}`,
+        `⚡ Success rate: ${workflowResults?.successRate || '96.8%'}`,
+        `📋 All logistics operations coordinated successfully`
+      ],
       results: {
         ...finalResult,
-        estimatedSavings: SAMPLE_WORKFLOW_RESULTS[workflow.intent?.type as keyof typeof SAMPLE_WORKFLOW_RESULTS]?.estimatedSavings || '$89.50',
-        timeToComplete: SAMPLE_WORKFLOW_RESULTS[workflow.intent?.type as keyof typeof SAMPLE_WORKFLOW_RESULTS]?.timeToComplete || '1.2 minutes',
-        benefits: SAMPLE_WORKFLOW_RESULTS[workflow.intent?.type as keyof typeof SAMPLE_WORKFLOW_RESULTS]?.benefits || ['Automated processing', 'Cost optimization', 'Time savings']
+        estimatedSavings: workflowResults?.estimatedSavings || '$89.50',
+        timeToComplete: `${completionTime} minutes`,
+        successRate: workflowResults?.successRate || '96.8%',
+        benefits: workflowResults?.benefits || ['Automated processing', 'Cost optimization', 'Time savings'],
+        operationsCompleted: totalSteps,
+        integrationsUsed: getIntegrationsUsed(workflow.intent?.type),
+        nextRecommendations: getNextRecommendations(workflow.intent?.type)
       }
     }));
+  };
+
+  const getStepEmoji = (stepType: string): string => {
+    const emojiMap: Record<string, string> = {
+      'api_call': '🌐',
+      'api_aggregation': '🔄',
+      'requirements_analysis': '📋',
+      'decision_matrix': '📊',
+      'logistics_coordination': '🚚',
+      'document_generation': '📄',
+      'financial_calculation': '💰',
+      'tracking': '📍',
+      'data_analysis': '📈',
+      'optimization_algorithm': '🧠',
+      'validation': '✅',
+      'notification': '📢',
+      'data_processing': '⚙️',
+      'erp_query': '🏢',
+      'decision': '🎯',
+      'wms_integration': '🏭'
+    };
+    return emojiMap[stepType] || '⚙️';
+  };
+
+  const getStepMessage = (stepType: string, stepName: string): string => {
+    const messages: Record<string, string[]> = {
+      'api_aggregation': ['Querying multiple providers...', 'Comparing rates and services...', 'Aggregating responses...'],
+      'requirements_analysis': ['Analyzing shipment requirements...', 'Validating parameters...', 'Generating recommendations...'],
+      'decision_matrix': ['Evaluating options...', 'Calculating weighted scores...', 'Ranking alternatives...'],
+      'logistics_coordination': ['Coordinating with carriers...', 'Scheduling resources...', 'Optimizing logistics flow...'],
+      'financial_calculation': ['Computing costs and taxes...', 'Analyzing financial impact...', 'Generating cost breakdown...'],
+      'tracking': ['Initiating real-time monitoring...', 'Setting up alerts...', 'Configuring notifications...'],
+      'data_analysis': ['Processing logistics data...', 'Identifying patterns...', 'Generating insights...']
+    };
+
+    const stepMessages = messages[stepType] || ['Processing request...', 'Executing operation...', 'Completing task...'];
+    return stepMessages[Math.floor(Math.random() * stepMessages.length)];
+  };
+
+  const getStepDuration = (stepType: string): number => {
+    const durations: Record<string, number> = {
+      'api_aggregation': 2000,
+      'requirements_analysis': 1200,
+      'decision_matrix': 1800,
+      'logistics_coordination': 2200,
+      'financial_calculation': 1000,
+      'tracking': 800,
+      'data_analysis': 2500,
+      'optimization_algorithm': 3000
+    };
+
+    const baseDuration = durations[stepType] || 1000;
+    return baseDuration + Math.random() * 800;
+  };
+
+  const getStepResult = (stepType: string): string => {
+    const results: Record<string, string[]> = {
+      'api_aggregation': ['3 providers compared', 'Best rates identified', 'Options ranked by value'],
+      'requirements_analysis': ['Requirements validated', 'Recommendations generated', 'Parameters optimized'],
+      'decision_matrix': ['Best option selected', 'Risk factors assessed', 'Cost-benefit analyzed'],
+      'logistics_coordination': ['Resources scheduled', 'Carriers coordinated', 'Timeline optimized'],
+      'financial_calculation': ['Costs calculated', 'Savings identified', 'Budget optimized'],
+      'tracking': ['Monitoring active', 'Alerts configured', 'Real-time updates enabled'],
+      'data_analysis': ['Insights generated', 'Patterns identified', 'Opportunities found']
+    };
+
+    const stepResults = results[stepType] || ['Operation completed', 'Data processed', 'Task finished'];
+    return stepResults[Math.floor(Math.random() * stepResults.length)];
+  };
+
+  const getIntegrationsUsed = (intentType: string): string[] => {
+    const integrations: Record<string, string[]> = {
+      'freight_forwarding': ['Kuehne + Nagel API', 'Expeditors Platform', 'Port Authority Systems'],
+      'warehousing': ['DHL Supply Chain', 'C.H. Robinson WMS', 'Prologis Network'],
+      'customs': ['CBP ACE Portal', 'Trade Compliance DB', 'Tariff Classification API'],
+      'consolidation': ['LTL Carrier Network', 'Load Optimization Engine', 'Route Planning API'],
+      'port_management': ['Port Authority APIs', 'Vessel Tracking Systems', 'Congestion Monitors'],
+      'compliance': ['Regulatory Database', 'Audit Management System', 'Certification Tracker'],
+      'cross_docking': ['WMS Integration', 'Dock Scheduling System', 'Sortation Control API']
+    };
+
+    return integrations[intentType] || ['Carrier APIs', 'Logistics Platform', 'Tracking Systems'];
+  };
+
+  const getNextRecommendations = (intentType: string): string[] => {
+    const recommendations: Record<string, string[]> = {
+      'freight_forwarding': ['Monitor vessel schedules', 'Track customs clearance', 'Optimize container utilization'],
+      'warehousing': ['Review capacity utilization', 'Optimize inventory placement', 'Monitor SLA performance'],
+      'customs': ['Track duty payments', 'Monitor compliance status', 'Update documentation'],
+      'consolidation': ['Monitor shipment volumes', 'Identify new opportunities', 'Track cost savings'],
+      'port_management': ['Continue congestion monitoring', 'Track vessel arrivals', 'Optimize dwell times'],
+      'compliance': ['Schedule follow-up audits', 'Monitor corrective actions', 'Update procedures'],
+      'cross_docking': ['Monitor throughput rates', 'Optimize dock assignments', 'Track performance metrics']
+    };
+
+    return recommendations[intentType] || ['Monitor performance', 'Track metrics', 'Optimize operations'];
   };
 
   const resetExecution = () => {
@@ -255,44 +399,105 @@ export function WorkflowExecutor({ workflow, onExecute }: WorkflowExecutorProps)
       {/* Results */}
       {execution.status === 'completed' && execution.results && (
         <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-          <h3 className="font-semibold text-green-800 mb-3 flex items-center gap-2">
+          <h3 className="font-semibold text-green-800 mb-4 flex items-center gap-2">
             🎉 Execution Results
           </h3>
-          
-          <div className="grid grid-cols-3 gap-4 mb-4">
-            <div className="text-center">
+
+          {/* Main Metrics */}
+          <div className="grid grid-cols-4 gap-4 mb-6">
+            <div className="text-center p-3 bg-white rounded-lg border border-green-200">
               <div className="text-2xl font-bold text-green-600">
                 {execution.results.estimatedSavings}
               </div>
               <div className="text-sm text-green-700">Estimated Savings</div>
             </div>
-            <div className="text-center">
+            <div className="text-center p-3 bg-white rounded-lg border border-blue-200">
               <div className="text-2xl font-bold text-blue-600">
                 {execution.results.timeToComplete}
               </div>
               <div className="text-sm text-blue-700">Completion Time</div>
             </div>
-            <div className="text-center">
+            <div className="text-center p-3 bg-white rounded-lg border border-purple-200">
               <div className="text-2xl font-bold text-purple-600">
-                {Math.round(execution.progress)}%
+                {execution.results.successRate || '96.8%'}
               </div>
               <div className="text-sm text-purple-700">Success Rate</div>
             </div>
+            <div className="text-center p-3 bg-white rounded-lg border border-orange-200">
+              <div className="text-2xl font-bold text-orange-600">
+                {execution.results.operationsCompleted || workflow.workflow?.steps?.length || 0}
+              </div>
+              <div className="text-sm text-orange-700">Operations</div>
+            </div>
           </div>
 
-          {execution.results.benefits && (
-            <div>
-              <h4 className="font-medium text-green-700 mb-2">Key Benefits</h4>
-              <div className="space-y-1">
-                {execution.results.benefits.map((benefit: string, index: number) => (
-                  <div key={index} className="flex items-center gap-2 text-sm text-green-600">
-                    <span>✓</span>
-                    <span>{benefit}</span>
+          {/* Detailed Results Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            {/* Key Benefits */}
+            {execution.results.benefits && (
+              <div className="p-3 bg-white rounded-lg border border-green-200">
+                <h4 className="font-medium text-green-700 mb-2 flex items-center gap-2">
+                  ✨ Key Benefits
+                </h4>
+                <div className="space-y-1">
+                  {execution.results.benefits.map((benefit: string, index: number) => (
+                    <div key={index} className="flex items-center gap-2 text-sm text-green-600">
+                      <span className="text-green-500">✓</span>
+                      <span>{benefit}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Integrations Used */}
+            {execution.results.integrationsUsed && (
+              <div className="p-3 bg-white rounded-lg border border-blue-200">
+                <h4 className="font-medium text-blue-700 mb-2 flex items-center gap-2">
+                  🔗 Integrations Used
+                </h4>
+                <div className="space-y-1">
+                  {execution.results.integrationsUsed.map((integration: string, index: number) => (
+                    <div key={index} className="flex items-center gap-2 text-sm text-blue-600">
+                      <span className="text-blue-500">•</span>
+                      <span>{integration}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Next Recommendations */}
+          {execution.results.nextRecommendations && (
+            <div className="p-3 bg-white rounded-lg border border-purple-200">
+              <h4 className="font-medium text-purple-700 mb-2 flex items-center gap-2">
+                🚀 Next Recommended Actions
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                {execution.results.nextRecommendations.map((recommendation: string, index: number) => (
+                  <div key={index} className="flex items-center gap-2 text-sm text-purple-600 p-2 bg-purple-50 rounded">
+                    <span className="text-purple-500">→</span>
+                    <span>{recommendation}</span>
                   </div>
                 ))}
               </div>
             </div>
           )}
+
+          {/* Performance Summary */}
+          <div className="mt-4 p-3 bg-gradient-to-r from-green-100 to-blue-100 rounded-lg border">
+            <div className="text-center">
+              <div className="text-sm font-medium text-gray-700 mb-1">
+                🏆 Workflow Performance Summary
+              </div>
+              <div className="text-xs text-gray-600">
+                Processed {execution.results.operationsCompleted || workflow.workflow?.steps?.length || 0} logistics operations
+                with {execution.results.successRate || '96.8%'} success rate,
+                achieving {execution.results.estimatedSavings} in estimated cost savings
+              </div>
+            </div>
+          </div>
         </div>
       )}
 

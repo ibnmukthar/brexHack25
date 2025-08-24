@@ -13,5 +13,15 @@ export declare class WorkflowExecutor {
     private executeNotification;
     private executeValidation;
     private executeERPQuery;
+    private executeApiAggregation;
+    private executeRequirementsAnalysis;
+    private executeDecisionMatrix;
+    private executeLogisticsCoordination;
+    private executeDocumentGeneration;
+    private executeFinancialCalculation;
+    private executeTracking;
+    private executeDataAnalysis;
+    private executeDecision;
+    private executeWMSIntegration;
     private delay;
 }

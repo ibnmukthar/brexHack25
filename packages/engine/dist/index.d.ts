@@ -3,6 +3,7 @@ export { WorkflowParser } from './parser';
 export { WorkflowGenerator } from './generator';
 export { WorkflowExecutor } from './executor';
 export { MockIntegrations } from './mock-integrations';
+export { AIWorkflowGenerator } from './ai-generator';
 export * from './types';
 export { AIProvider, WorkflowTemplate, ParameterSchema } from './ai-providers/ai-provider-interface';
 export { ClaudeService } from './ai-providers/claude-service';

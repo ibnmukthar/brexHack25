@@ -28,8 +28,17 @@ export function WorkflowVisualizer({ workflow }: WorkflowVisualizerProps) {
       'rule_engine': '⚡',
       'demand_forecasting': '📉',
       'financial_transaction': '💰',
+      'financial_calculation': '💰',
       'quality_control': '🔍',
-      'data_collection': '📥'
+      'data_collection': '📥',
+      'data_analysis': '📊',
+      'tracking': '📍',
+      'wms_integration': '🏭',
+      'port_monitoring': '⚓',
+      'customs_processing': '🛃',
+      'consolidation_planning': '📦',
+      'compliance_audit': '📋',
+      'cross_dock_coordination': '🔄'
     };
     return icons[type] || '⚙️';
   };
@@ -37,7 +46,7 @@ export function WorkflowVisualizer({ workflow }: WorkflowVisualizerProps) {
   const getStepColor = (type: string): string => {
     const colors: Record<string, string> = {
       'api_call': 'border-blue-300 bg-blue-50',
-      'data_processing': 'border-green-300 bg-green-50', 
+      'data_processing': 'border-green-300 bg-green-50',
       'optimization_algorithm': 'border-purple-300 bg-purple-50',
       'notification': 'border-yellow-300 bg-yellow-50',
       'validation': 'border-emerald-300 bg-emerald-50',
@@ -45,7 +54,14 @@ export function WorkflowVisualizer({ workflow }: WorkflowVisualizerProps) {
       'logistics_coordination': 'border-red-300 bg-red-50',
       'decision': 'border-indigo-300 bg-indigo-50',
       'document_generation': 'border-gray-300 bg-gray-50',
-      'financial_transaction': 'border-green-400 bg-green-100'
+      'financial_transaction': 'border-green-400 bg-green-100',
+      'financial_calculation': 'border-green-400 bg-green-100',
+      'api_aggregation': 'border-cyan-300 bg-cyan-50',
+      'requirements_analysis': 'border-slate-300 bg-slate-50',
+      'decision_matrix': 'border-violet-300 bg-violet-50',
+      'tracking': 'border-amber-300 bg-amber-50',
+      'data_analysis': 'border-teal-300 bg-teal-50',
+      'wms_integration': 'border-rose-300 bg-rose-50'
     };
     return colors[type] || 'border-gray-300 bg-gray-50';
   };

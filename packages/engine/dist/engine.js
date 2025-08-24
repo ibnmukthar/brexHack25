@@ -5,10 +5,12 @@ const parser_1 = require("./parser");
 const generator_1 = require("./generator");
 const executor_1 = require("./executor");
 const mock_integrations_1 = require("./mock-integrations");
+const ai_generator_1 = require("./ai-generator");
 class LogisticsEngine {
     constructor() {
         this.parser = new parser_1.WorkflowParser();
         this.generator = new generator_1.WorkflowGenerator();
+        this.aiGenerator = new ai_generator_1.AIWorkflowGenerator();
         this.executor = new executor_1.WorkflowExecutor();
         this.integrations = new mock_integrations_1.MockIntegrations();
     }
@@ -24,6 +26,35 @@ class LogisticsEngine {
             intent,
             workflow,
             ui,
+            executable: true,
+            createdAt: new Date().toISOString()
+        };
+    }
+    async createAIWorkflow(input) {
+        console.log('🤖 AI Parsing input:', input);
+        const intent = await this.parser.parse(input);
+        console.log('🎯 AI Detected intent:', intent);
+        // Create AI workflow request
+        const aiRequest = {
+            intent,
+            userInput: input,
+            context: {
+                previousWorkflows: [],
+                constraints: intent.constraints || {},
+                preferences: {}
+            }
+        };
+        // Generate dynamic workflow with AI
+        const { workflow, langGraph, uiControls } = await this.aiGenerator.generateDynamicWorkflow(aiRequest);
+        console.log('🤖 AI Generated workflow:', workflow.name);
+        const ui = this.generateSimpleUI(workflow);
+        return {
+            id: workflow.id,
+            intent,
+            workflow,
+            langGraph,
+            ui,
+            uiControls,
             executable: true,
             createdAt: new Date().toISOString()
         };

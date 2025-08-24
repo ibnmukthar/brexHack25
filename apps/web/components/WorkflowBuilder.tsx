@@ -14,23 +14,27 @@ export function WorkflowBuilder({ onWorkflowCreated }: WorkflowBuilderProps) {
 
   const handleSubmit = async () => {
     if (!input.trim()) return;
-    
+
     setLoading(true);
     try {
       const response = await fetch('/api/workflow/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ input })
+        body: JSON.stringify({
+          input,
+          useAI: true // Enable AI-powered workflow generation
+        })
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to create workflow');
       }
-      
+
       const workflow = await response.json();
       onWorkflowCreated(workflow);
     } catch (error) {
       console.error('Error creating workflow:', error);
+      alert('Failed to create workflow. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -87,29 +91,33 @@ export function WorkflowBuilder({ onWorkflowCreated }: WorkflowBuilderProps) {
 
       {/* Demo Scenarios */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Quick Start Scenarios
+        <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+          <span>⚡ Quick Start Scenarios</span>
+          <span className="text-xs text-gray-500">({filteredScenarios.length} available)</span>
         </label>
-        <div className="grid grid-cols-1 gap-2 max-h-32 overflow-y-auto">
+        <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto">
           {filteredScenarios.map((scenario) => (
             <button
               key={scenario.id}
               onClick={() => handleScenarioSelect(scenario)}
-              className="text-left p-2 rounded-md border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors group"
+              className="text-left p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 group hover:shadow-md"
             >
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-700 group-hover:text-blue-700">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-sm font-medium text-gray-700 group-hover:text-blue-700 flex items-center gap-2">
                   {scenario.name}
                 </span>
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${{
-                  'medium': 'bg-yellow-100 text-yellow-700',
-                  'high': 'bg-red-100 text-red-700',
-                  'low': 'bg-green-100 text-green-700'
-                }[scenario.complexity] || 'bg-gray-100 text-gray-600'}`}>
-                  {scenario.complexity}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${{
+                    'medium': 'bg-yellow-100 text-yellow-700',
+                    'high': 'bg-red-100 text-red-700',
+                    'low': 'bg-green-100 text-green-700'
+                  }[scenario.complexity] || 'bg-gray-100 text-gray-600'}`}>
+                    {scenario.complexity}
+                  </span>
+                  <div className="w-2 h-2 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
               </div>
-              <p className="text-xs text-gray-500 mt-1 group-hover:text-blue-600">
+              <p className="text-xs text-gray-500 group-hover:text-blue-600 transition-colors">
                 {scenario.description}
               </p>
             </button>
@@ -148,11 +156,11 @@ export function WorkflowBuilder({ onWorkflowCreated }: WorkflowBuilderProps) {
         {loading ? (
           <>
             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-            Generating Workflow...
+            <span className="animate-pulse">Analyzing logistics requirements...</span>
           </>
         ) : (
           <>
-            <span>🚀</span>
+            <span className="text-lg">🚀</span>
             Generate AI Workflow
           </>
         )}
