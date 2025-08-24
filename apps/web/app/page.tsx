@@ -93,7 +93,6 @@ export default function HomePage() {
               <div className="space-y-6">
                 {/* AI Assistant Card */}
                 <div className="bg-white rounded-lg shadow-lg p-8 border border-gray-200 text-center">
-                  <div className="text-6xl mb-4">🤖</div>
                   <h3 className="text-xl font-semibold text-gray-800 mb-2">
                     Ready to Build Your Workflow
                   </h3>
@@ -118,53 +117,6 @@ export default function HomePage() {
                     <div className="p-3 border border-gray-200 rounded-lg">
                       <div className="font-medium text-gray-800 mb-1">📊 Inventory Management</div>
                       <div className="text-sm text-gray-600">Automated reordering with demand forecasting</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Live Metrics Dashboard */}
-                <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    📊 Platform Metrics
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  </h3>
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className="text-center p-3 bg-blue-50 rounded-lg">
-                      <div className="text-2xl font-bold text-blue-600">2,847</div>
-                      <div className="text-sm text-blue-700">Workflows Generated</div>
-                    </div>
-                    <div className="text-center p-3 bg-green-50 rounded-lg">
-                      <div className="text-2xl font-bold text-green-600">$1.2M</div>
-                      <div className="text-sm text-green-700">Cost Savings</div>
-                    </div>
-                    <div className="text-center p-3 bg-purple-50 rounded-lg">
-                      <div className="text-2xl font-bold text-purple-600">96.8%</div>
-                      <div className="text-sm text-purple-700">Success Rate</div>
-                    </div>
-                    <div className="text-center p-3 bg-orange-50 rounded-lg">
-                      <div className="text-2xl font-bold text-orange-600">47</div>
-                      <div className="text-sm text-orange-700">Active Integrations</div>
-                    </div>
-                  </div>
-
-                  {/* Live Activity Feed */}
-                  <div className="pt-4 border-t border-gray-200">
-                    <h4 className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
-                      ⚡ Live Activity
-                    </h4>
-                    <div className="space-y-2 text-xs">
-                      <div className="flex items-center gap-2 text-green-600 p-2 bg-green-50 rounded">
-                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                        <span>Freight workflow completed - $1,250 saved</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-blue-600 p-2 bg-blue-50 rounded">
-                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
-                        <span>3PL warehouse selection in progress</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-purple-600 p-2 bg-purple-50 rounded">
-                        <div className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-pulse"></div>
-                        <span>Customs clearance automated</span>
-                      </div>
                     </div>
                   </div>
                 </div>
