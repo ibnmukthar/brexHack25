@@ -3,6 +3,7 @@ export declare class LogisticsEngine {
     private parser;
     private generator;
     private aiGenerator;
+    private mastraGenerator;
     private executor;
     private integrations;
     constructor();
@@ -23,6 +24,17 @@ export declare class LogisticsEngine {
         uiControls: any[];
         executable: boolean;
         createdAt: string;
+    }>;
+    createMastraWorkflow(input: string): Promise<{
+        id: string;
+        intent: import("./types").LogisticsIntent;
+        workflow: Workflow;
+        mastraComposition: import("./mastra-generator").MastraWorkflowComposition;
+        ui: WorkflowUI;
+        uiControls: any[];
+        executable: boolean;
+        createdAt: string;
+        framework: string;
     }>;
     executeWorkflow(workflowId: string, params?: any): Promise<import("./types").WorkflowExecution>;
     getWorkflowStatus(executionId: string): Promise<{

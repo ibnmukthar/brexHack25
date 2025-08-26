@@ -12,10 +12,13 @@ interface ThreeViewWorkflowProps {
 export function ThreeViewWorkflow({ workflow, onExecute }: ThreeViewWorkflowProps) {
   const [activeView, setActiveView] = useState<'ui' | 'workflow' | 'code'>('ui');
 
+  const framework = workflow?.framework || 'langgraph';
+  const codeLabel = framework === 'mastra' ? 'Generated Mastra code' : 'Generated LangGraph code';
+
   const tabs = [
     { id: 'ui', label: '🎛️ UI View', description: 'Interactive workflow controls' },
     { id: 'workflow', label: '📊 Workflow View', description: 'Visual workflow graph' },
-    { id: 'code', label: '💻 Code View', description: 'Generated LangGraph code' }
+    { id: 'code', label: '💻 Code View', description: codeLabel }
   ];
 
   return (
@@ -195,9 +198,14 @@ function WorkflowView({ workflow }: { workflow: any }) {
 function CodeView({ workflow }: { workflow: any }) {
   const [copied, setCopied] = useState(false);
 
+  const framework = workflow?.framework || 'langgraph';
+  const isMastra = framework === 'mastra';
+  const code = isMastra ? workflow.mastraComposition?.mastraCode : workflow.langGraph?.code;
+  const language = isMastra ? 'typescript' : 'python';
+
   const handleCopy = async () => {
-    if (workflow.langGraph?.code) {
-      await navigator.clipboard.writeText(workflow.langGraph.code);
+    if (code) {
+      await navigator.clipboard.writeText(code);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -207,13 +215,19 @@ function CodeView({ workflow }: { workflow: any }) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Generated LangGraph Code</h3>
-          <p className="text-sm text-gray-600">Executable Python code for your workflow</p>
+          <h3 className="text-lg font-semibold text-gray-900">
+            Generated {isMastra ? 'Mastra' : 'LangGraph'} Code
+          </h3>
+          <p className="text-sm text-gray-600">
+            Executable {isMastra ? 'TypeScript' : 'Python'} code for your workflow
+          </p>
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-sm text-green-600 font-medium">Production Ready</span>
+            <div className={`w-2 h-2 rounded-full animate-pulse ${isMastra ? 'bg-purple-500' : 'bg-green-500'}`}></div>
+            <span className={`text-sm font-medium ${isMastra ? 'text-purple-600' : 'text-green-600'}`}>
+              {isMastra ? 'Mastra Ready' : 'Production Ready'}
+            </span>
           </div>
           <button
             onClick={handleCopy}
@@ -224,10 +238,10 @@ function CodeView({ workflow }: { workflow: any }) {
         </div>
       </div>
 
-      {workflow.langGraph?.code ? (
+      {code ? (
         <div className="border border-gray-200 rounded-lg overflow-hidden">
           <div className="bg-gray-800 text-gray-100 p-4 text-sm font-mono overflow-x-auto">
-            <pre className="whitespace-pre-wrap">{workflow.langGraph.code}</pre>
+            <pre className="whitespace-pre-wrap">{code}</pre>
           </div>
         </div>
       ) : (
@@ -238,32 +252,63 @@ function CodeView({ workflow }: { workflow: any }) {
       )}
 
       {/* Code Statistics */}
-      {workflow.langGraph?.code && (
+      {code && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center p-3 bg-blue-50 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600">
-              {workflow.langGraph.nodes?.length || 0}
-            </div>
-            <div className="text-sm text-blue-700">Nodes</div>
-          </div>
-          <div className="text-center p-3 bg-green-50 rounded-lg">
-            <div className="text-2xl font-bold text-green-600">
-              {workflow.langGraph.edges?.length || 0}
-            </div>
-            <div className="text-sm text-green-700">Edges</div>
-          </div>
-          <div className="text-center p-3 bg-purple-50 rounded-lg">
-            <div className="text-2xl font-bold text-purple-600">
-              {workflow.langGraph.code.split('\n').length}
-            </div>
-            <div className="text-sm text-purple-700">Lines</div>
-          </div>
-          <div className="text-center p-3 bg-orange-50 rounded-lg">
-            <div className="text-2xl font-bold text-orange-600">
-              {Math.ceil(workflow.langGraph.code.length / 1000)}K
-            </div>
-            <div className="text-sm text-orange-700">Characters</div>
-          </div>
+          {isMastra ? (
+            <>
+              <div className="text-center p-3 bg-purple-50 rounded-lg">
+                <div className="text-2xl font-bold text-purple-600">
+                  {workflow.mastraComposition?.selectedComponents?.tools?.length || 0}
+                </div>
+                <div className="text-sm text-purple-700">Tools</div>
+              </div>
+              <div className="text-center p-3 bg-blue-50 rounded-lg">
+                <div className="text-2xl font-bold text-blue-600">
+                  {workflow.mastraComposition?.selectedComponents?.agents?.length || 0}
+                </div>
+                <div className="text-sm text-blue-700">Agents</div>
+              </div>
+              <div className="text-center p-3 bg-green-50 rounded-lg">
+                <div className="text-2xl font-bold text-green-600">
+                  {workflow.mastraComposition?.workflowStructure?.steps?.length || 0}
+                </div>
+                <div className="text-sm text-green-700">Steps</div>
+              </div>
+              <div className="text-center p-3 bg-orange-50 rounded-lg">
+                <div className="text-2xl font-bold text-orange-600">
+                  {Math.ceil(code.length / 1000)}K
+                </div>
+                <div className="text-sm text-orange-700">Characters</div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="text-center p-3 bg-blue-50 rounded-lg">
+                <div className="text-2xl font-bold text-blue-600">
+                  {workflow.langGraph?.nodes?.length || 0}
+                </div>
+                <div className="text-sm text-blue-700">Nodes</div>
+              </div>
+              <div className="text-center p-3 bg-green-50 rounded-lg">
+                <div className="text-2xl font-bold text-green-600">
+                  {workflow.langGraph?.edges?.length || 0}
+                </div>
+                <div className="text-sm text-green-700">Edges</div>
+              </div>
+              <div className="text-center p-3 bg-purple-50 rounded-lg">
+                <div className="text-2xl font-bold text-purple-600">
+                  {code.split('\n').length}
+                </div>
+                <div className="text-sm text-purple-700">Lines</div>
+              </div>
+              <div className="text-center p-3 bg-orange-50 rounded-lg">
+                <div className="text-2xl font-bold text-orange-600">
+                  {Math.ceil(code.length / 1000)}K
+                </div>
+                <div className="text-sm text-orange-700">Characters</div>
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

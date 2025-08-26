@@ -14,7 +14,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AIProviderFactory = exports.ClaudeService = exports.AIWorkflowGenerator = exports.MockIntegrations = exports.WorkflowExecutor = exports.WorkflowGenerator = exports.WorkflowParser = exports.LogisticsEngine = void 0;
+exports.AIProviderFactory = exports.ClaudeService = exports.ComponentDiscovery = exports.MastraWorkflowGenerator = exports.AIWorkflowGenerator = exports.MockIntegrations = exports.WorkflowExecutor = exports.WorkflowGenerator = exports.WorkflowParser = exports.LogisticsEngine = void 0;
 exports.textToWorkflow = textToWorkflow;
 var engine_1 = require("./engine");
 Object.defineProperty(exports, "LogisticsEngine", { enumerable: true, get: function () { return engine_1.LogisticsEngine; } });
@@ -28,7 +28,13 @@ var mock_integrations_1 = require("./mock-integrations");
 Object.defineProperty(exports, "MockIntegrations", { enumerable: true, get: function () { return mock_integrations_1.MockIntegrations; } });
 var ai_generator_1 = require("./ai-generator");
 Object.defineProperty(exports, "AIWorkflowGenerator", { enumerable: true, get: function () { return ai_generator_1.AIWorkflowGenerator; } });
+var mastra_generator_1 = require("./mastra-generator");
+Object.defineProperty(exports, "MastraWorkflowGenerator", { enumerable: true, get: function () { return mastra_generator_1.MastraWorkflowGenerator; } });
 __exportStar(require("./types"), exports);
+// Mastra Components
+__exportStar(require("./mastra/registry"), exports);
+var discovery_1 = require("./mastra/discovery");
+Object.defineProperty(exports, "ComponentDiscovery", { enumerable: true, get: function () { return discovery_1.ComponentDiscovery; } });
 var claude_service_1 = require("./ai-providers/claude-service");
 Object.defineProperty(exports, "ClaudeService", { enumerable: true, get: function () { return claude_service_1.ClaudeService; } });
 var provider_factory_1 = require("./ai-providers/provider-factory");

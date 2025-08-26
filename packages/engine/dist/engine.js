@@ -6,11 +6,13 @@ const generator_1 = require("./generator");
 const executor_1 = require("./executor");
 const mock_integrations_1 = require("./mock-integrations");
 const ai_generator_1 = require("./ai-generator");
+const mastra_generator_1 = require("./mastra-generator");
 class LogisticsEngine {
     constructor() {
         this.parser = new parser_1.WorkflowParser();
         this.generator = new generator_1.WorkflowGenerator();
         this.aiGenerator = new ai_generator_1.AIWorkflowGenerator();
+        this.mastraGenerator = new mastra_generator_1.MastraWorkflowGenerator();
         this.executor = new executor_1.WorkflowExecutor();
         this.integrations = new mock_integrations_1.MockIntegrations();
     }
@@ -57,6 +59,36 @@ class LogisticsEngine {
             uiControls,
             executable: true,
             createdAt: new Date().toISOString()
+        };
+    }
+    async createMastraWorkflow(input) {
+        console.log('🔧 Mastra Parsing input:', input);
+        const intent = await this.parser.parse(input);
+        console.log('🎯 Mastra Detected intent:', intent);
+        // Create Mastra workflow request
+        const mastraRequest = {
+            intent,
+            userInput: input,
+            context: {
+                previousWorkflows: [],
+                constraints: intent.constraints || {},
+                preferences: {}
+            }
+        };
+        // Generate Mastra workflow with component composition
+        const { workflow, mastraComposition, uiControls } = await this.mastraGenerator.generateMastraWorkflow(mastraRequest);
+        console.log('🔧 Mastra Generated workflow:', workflow.name);
+        const ui = this.generateSimpleUI(workflow);
+        return {
+            id: workflow.id,
+            intent,
+            workflow,
+            mastraComposition,
+            ui,
+            uiControls,
+            executable: true,
+            createdAt: new Date().toISOString(),
+            framework: 'mastra'
         };
     }
     async executeWorkflow(workflowId, params = {}) {

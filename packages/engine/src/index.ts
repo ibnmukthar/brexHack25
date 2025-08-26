@@ -4,7 +4,12 @@ export { WorkflowGenerator } from './generator';
 export { WorkflowExecutor } from './executor';
 export { MockIntegrations } from './mock-integrations';
 export { AIWorkflowGenerator } from './ai-generator';
+export { MastraWorkflowGenerator } from './mastra-generator';
 export * from './types';
+
+// Mastra Components
+export * from './mastra/registry';
+export { ComponentDiscovery } from './mastra/discovery';
 
 // AI Providers
 export { AIProvider, WorkflowTemplate, ParameterSchema } from './ai-providers/ai-provider-interface';

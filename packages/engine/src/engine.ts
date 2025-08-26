@@ -3,12 +3,14 @@ import { WorkflowGenerator } from './generator';
 import { WorkflowExecutor } from './executor';
 import { MockIntegrations } from './mock-integrations';
 import { AIWorkflowGenerator, AIWorkflowRequest } from './ai-generator';
+import { MastraWorkflowGenerator, MastraWorkflowRequest } from './mastra-generator';
 import { Workflow, WorkflowUI, UIComponent } from './types';
 
 export class LogisticsEngine {
   private parser: WorkflowParser;
   private generator: WorkflowGenerator;
   private aiGenerator: AIWorkflowGenerator;
+  private mastraGenerator: MastraWorkflowGenerator;
   private executor: WorkflowExecutor;
   private integrations: MockIntegrations;
 
@@ -16,6 +18,7 @@ export class LogisticsEngine {
     this.parser = new WorkflowParser();
     this.generator = new WorkflowGenerator();
     this.aiGenerator = new AIWorkflowGenerator();
+    this.mastraGenerator = new MastraWorkflowGenerator();
     this.executor = new WorkflowExecutor();
     this.integrations = new MockIntegrations();
   }
@@ -73,6 +76,42 @@ export class LogisticsEngine {
       uiControls,
       executable: true,
       createdAt: new Date().toISOString()
+    };
+  }
+
+  async createMastraWorkflow(input: string) {
+    console.log('🔧 Mastra Parsing input:', input);
+
+    const intent = await this.parser.parse(input);
+    console.log('🎯 Mastra Detected intent:', intent);
+
+    // Create Mastra workflow request
+    const mastraRequest: MastraWorkflowRequest = {
+      intent,
+      userInput: input,
+      context: {
+        previousWorkflows: [],
+        constraints: intent.constraints || {},
+        preferences: {}
+      }
+    };
+
+    // Generate Mastra workflow with component composition
+    const { workflow, mastraComposition, uiControls } = await this.mastraGenerator.generateMastraWorkflow(mastraRequest);
+    console.log('🔧 Mastra Generated workflow:', workflow.name);
+
+    const ui = this.generateSimpleUI(workflow);
+
+    return {
+      id: workflow.id,
+      intent,
+      workflow,
+      mastraComposition,
+      ui,
+      uiControls,
+      executable: true,
+      createdAt: new Date().toISOString(),
+      framework: 'mastra'
     };
   }
 
